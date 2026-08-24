@@ -24,9 +24,10 @@ class _TablePracticeScreenState extends State<TablePracticeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Maths Table Rush')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
+          children: [
           const Text('Select numbers (one or more)',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
@@ -150,6 +151,7 @@ class _TablePracticeScreenState extends State<TablePracticeScreen> {
                     ),
           ),
         ],
+        ),
       ),
     );
   }

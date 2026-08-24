@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/history_dao.dart';
+import '../models/cartoon_character.dart';
 import '../models/session.dart';
 import 'home_screen.dart';
 
@@ -16,25 +17,18 @@ class ResultsScreen extends StatefulWidget {
 
 class _ResultsScreenState extends State<ResultsScreen> {
   final HistoryDao _dao = HistoryDao();
+  late final CartoonCharacter _character;
 
   @override
   void initState() {
     super.initState();
     _save();
+    _character = cartoonCharacters[
+        DateTime.now().millisecondsSinceEpoch % cartoonCharacters.length];
   }
 
   Future<void> _save() async {
     await _dao.saveSession(widget.session);
-  }
-
-  /// Returns an encouraging message based on the final score.
-  String _praiseFor(int score) {
-    if (score >= 200) return 'Mind blowing!';
-    if (score >= 150) return 'Genius!';
-    if (score >= 100) return 'Superb!';
-    if (score >= 50) return 'Wow!';
-    if (score >= 20) return 'Good job!';
-    return 'Keep practicing!';
   }
 
   @override
@@ -62,15 +56,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   color: scheme.primary,
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                _praiseFor(s.score),
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.amber,
-                ),
-              ),
+              const SizedBox(height: 16),
+              _buildCharacterCard(),
               const SizedBox(height: 24),
               _metricCard('Final Score', '${s.score}', Icons.stars),
               const SizedBox(height: 12),
@@ -120,6 +107,46 @@ class _ResultsScreenState extends State<ResultsScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCharacterCard() {
+    return Card(
+      color: _character.color.withValues(alpha: 0.15),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 32,
+              backgroundColor: _character.color,
+              child: Icon(_character.icon,
+                  size: 36, color: Colors.white),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _character.name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: _character.color,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _character.commentFor(widget.session.score),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

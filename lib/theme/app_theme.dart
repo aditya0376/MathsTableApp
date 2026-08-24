@@ -5,7 +5,8 @@ enum AppTheme {
   light('Light'),
   dark('Dark'),
   ocean('Ocean'),
-  midnight('Midnight');
+  midnight('Midnight'),
+  kids('Kids');
 
   final String label;
   const AppTheme(this.label);
@@ -42,7 +43,52 @@ ThemeData buildTheme(AppTheme theme) {
         surface: const Color(0xFF1A1A2E),
         onSurface: const Color(0xFFE0E0FF),
       );
+    case AppTheme.kids:
+      return _kidsTheme();
   }
+}
+
+/// Bright, playful kids theme with cartoon-friendly colors.
+ThemeData _kidsTheme() {
+  const primary = Color(0xFFFF6F00); // warm orange
+  const surface = Color(0xFFFFF8E1); // soft cream
+  final scheme = ColorScheme.fromSeed(
+    seedColor: primary,
+    brightness: Brightness.light,
+    surface: surface,
+  );
+  return ThemeData(
+    useMaterial3: true,
+    colorScheme: scheme,
+    scaffoldBackgroundColor: surface,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFFFFB300),
+      foregroundColor: Color(0xFF4E342E),
+      elevation: 0,
+      centerTitle: true,
+    ),
+    cardTheme: CardThemeData(
+      color: Colors.white,
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        backgroundColor: const Color(0xFFFF6F00),
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.white,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide.none,
+      ),
+    ),
+  );
 }
 
 ThemeData _base({
