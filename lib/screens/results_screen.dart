@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/history_dao.dart';
 import '../models/cartoon_character.dart';
 import '../models/session.dart';
+import '../widgets/cartoon_character_view.dart';
 import 'home_screen.dart';
 
 /// Results screen shown after a practice session.
@@ -119,11 +120,10 @@ class _ResultsScreenState extends State<ResultsScreen> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 32,
-              backgroundColor: _character.color,
-              child: Icon(_character.icon,
-                  size: 36, color: Colors.white),
+            CartoonCharacterView(
+              type: _character.type,
+              size: 72,
+              primaryColor: _character.color,
             ),
             const SizedBox(width: 16),
             Expanded(

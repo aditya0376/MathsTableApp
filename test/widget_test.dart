@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +17,16 @@ void main() {
     // Home screen title should be present.
     expect(find.text('Maths Tables Practice'), findsOneWidget);
 
-    // The three main sections should be visible.
+    // The main sections should be present.
     expect(find.text('Practice'), findsOneWidget);
     expect(find.text('Maths Table Rush'), findsOneWidget);
+
+    // Scroll the ListView to reveal the last section.
+    await tester.scrollUntilVisible(
+      find.text('Higher Order Maths'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Higher Order Maths'), findsOneWidget);
   });
 }

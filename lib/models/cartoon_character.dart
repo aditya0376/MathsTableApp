@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/cartoon_character_view.dart';
+
 /// A cartoon character that comments on the user's results.
 class CartoonCharacter {
   final String name;
-  final IconData icon;
+  final CartoonType type;
   final Color color;
 
   const CartoonCharacter({
     required this.name,
-    required this.icon,
+    required this.type,
     required this.color,
   });
 
@@ -23,31 +25,36 @@ class CartoonCharacter {
   }
 }
 
-/// A collection of friendly cartoon characters.
+/// A collection of friendly original cartoon characters.
 const List<CartoonCharacter> cartoonCharacters = [
   CartoonCharacter(
-    name: 'Sunny the Lion',
-    icon: Icons.emoji_nature,
+    name: 'Robo the Robot',
+    type: CartoonType.robot,
+    color: Color(0xFF42A5F5),
+  ),
+  CartoonCharacter(
+    name: 'Sunny the Sun',
+    type: CartoonType.sun,
     color: Color(0xFFFFB300),
   ),
   CartoonCharacter(
-    name: 'Bubbles the Bear',
-    icon: Icons.emoji_emotions,
+    name: 'Whiskers the Cat',
+    type: CartoonType.cat,
     color: Color(0xFF8D6E63),
   ),
   CartoonCharacter(
-    name: 'Zippy the Zebra',
-    icon: Icons.emoji_people,
-    color: Color(0xFF5C6BC0),
+    name: 'Stella the Star',
+    type: CartoonType.star,
+    color: Color(0xFFFFD54F),
   ),
   CartoonCharacter(
-    name: 'Momo the Monkey',
-    icon: Icons.emoji_food_beverage,
+    name: 'Rocket the Racer',
+    type: CartoonType.rocket,
     color: Color(0xFF66BB6A),
   ),
   CartoonCharacter(
-    name: 'Daisy the Dolphin',
-    icon: Icons.emoji_transportation,
-    color: Color(0xFF29B6F6),
+    name: 'Hooty the Owl',
+    type: CartoonType.owl,
+    color: Color(0xFF7E57C2),
   ),
 ];
