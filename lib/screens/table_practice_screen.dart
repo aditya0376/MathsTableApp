@@ -11,7 +11,7 @@ class TablePracticeScreen extends StatefulWidget {
 }
 
 class _TablePracticeScreenState extends State<TablePracticeScreen> {
-  final Set<int> _selectedNumbers = {7};
+  final Set<int> _selectedNumbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   final Set<String> _selectedOperations = {'x'};
   String _mode = 'Random';
   int _timerSeconds = 60;

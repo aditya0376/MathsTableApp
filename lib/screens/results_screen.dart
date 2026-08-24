@@ -27,6 +27,16 @@ class _ResultsScreenState extends State<ResultsScreen> {
     await _dao.saveSession(widget.session);
   }
 
+  /// Returns an encouraging message based on the final score.
+  String _praiseFor(int score) {
+    if (score >= 200) return 'Mind blowing!';
+    if (score >= 150) return 'Genius!';
+    if (score >= 100) return 'Superb!';
+    if (score >= 50) return 'Wow!';
+    if (score >= 20) return 'Good job!';
+    return 'Keep practicing!';
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = widget.session;
@@ -50,6 +60,15 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: scheme.primary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _praiseFor(s.score),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber,
                 ),
               ),
               const SizedBox(height: 24),
