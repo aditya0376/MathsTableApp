@@ -152,7 +152,7 @@ class ProblemGenerator {
         final base = _rng.nextInt(9) + 1;
         return Problem(
           question: '$pct% of $base = ?',
-          answer: '${(pct * base / 100).toStringAsFixed(0)}',
+          answer: (pct * base / 100).toStringAsFixed(0),
           operation: 'Percentages',
         );
       case 'Algebra':

@@ -16,7 +16,6 @@ class ResultsScreen extends StatefulWidget {
 
 class _ResultsScreenState extends State<ResultsScreen> {
   final HistoryDao _dao = HistoryDao();
-  bool _saved = false;
 
   @override
   void initState() {
@@ -26,7 +25,6 @@ class _ResultsScreenState extends State<ResultsScreen> {
 
   Future<void> _save() async {
     await _dao.saveSession(widget.session);
-    if (mounted) setState(() => _saved = true);
   }
 
   @override
@@ -44,7 +42,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              Icon(Icons.emoji_events, size: 80, color: Colors.amber),
+              const Icon(Icons.emoji_events, size: 80, color: Colors.amber),
               const SizedBox(height: 8),
               Text(
                 s.rating,

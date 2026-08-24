@@ -24,6 +24,13 @@ class Session {
     required this.durationSeconds,
   });
 
+  /// Performance rating based on accuracy.
+  String get rating {
+    if (accuracy > 90) return 'Excellent';
+    if (accuracy >= 70) return 'Good';
+    return 'Needs Practice';
+  }
+
   Map<String, Object?> toMap() {
     return {
       'id': id,
