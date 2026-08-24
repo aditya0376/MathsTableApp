@@ -63,5 +63,15 @@ void main() {
       engine.evaluate('3', '5');
       expect(engine.accuracy, 50.0);
     });
+
+    test('numeric formatting differences are accepted', () {
+      final engine = ScoringEngine();
+      // "4" should match "4.0"
+      expect(engine.evaluate('4', '4.0'), greaterThanOrEqualTo(10));
+      // "3.3" should match "3.30"
+      expect(engine.evaluate('3.3', '3.30'), greaterThanOrEqualTo(10));
+      // fraction "1/2" should match "0.5"
+      expect(engine.evaluate('1/2', '0.5'), greaterThanOrEqualTo(10));
+    });
   });
 }

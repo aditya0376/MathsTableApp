@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class PracticeScreen extends StatefulWidget {
   final String mode;
   final String difficulty;
   final int? timerSeconds; // null = no timer
-  final int? table; // for table practice
+  final List<int>? tables; // for table practice (one or more tables)
   final String? tableMode; // Sequential/Random/Reverse/FillBlank
   final String? higherTopic; // for higher order maths
 
@@ -21,7 +22,7 @@ class PracticeScreen extends StatefulWidget {
     required this.mode,
     this.difficulty = 'Easy',
     this.timerSeconds,
-    this.table,
+    this.tables,
     this.tableMode,
     this.higherTopic,
   });
@@ -33,6 +34,7 @@ class PracticeScreen extends StatefulWidget {
 class _PracticeScreenState extends State<PracticeScreen> {
   final ScoringEngine _engine = ScoringEngine();
   final TextEditingController _answerController = TextEditingController();
+  final Random _rng = Random();
 
   Problem? _current;
   Timer? _timer;
@@ -69,9 +71,11 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   void _nextProblem() {
     setState(() {
-      if (widget.table != null) {
+      if (widget.tables != null && widget.tables!.isNotEmpty) {
+        // Pick a random table from the selected list.
+        final table = widget.tables![_rng.nextInt(widget.tables!.length)];
         _current = ProblemGenerator.tableProblem(
-          widget.table!,
+          table,
           widget.tableMode ?? 'Random',
         );
       } else if (widget.higherTopic != null) {

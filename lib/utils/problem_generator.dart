@@ -83,7 +83,7 @@ class ProblemGenerator {
 
   /// Generates a table practice problem for a specific table and mode.
   static Problem tableProblem(int table, String mode) {
-    final n = _rng.nextInt(9) + 1; // 1..9
+    final n = _rng.nextInt(10) + 1; // 1..10
     switch (mode) {
       case 'Sequential':
         // handled by caller with explicit n; here random
@@ -168,7 +168,11 @@ class ProblemGenerator {
         final a = _rng.nextInt(9) + 1;
         final b = _rng.nextInt(9) + 1;
         final c = _rng.nextInt(9) + 1;
-        final avg = ((a + b + c) / 3).toStringAsFixed(1);
+        final sum = a + b + c;
+        // Show whole number when divisible by 3, otherwise one decimal.
+        final avg = sum % 3 == 0
+            ? '${sum ~/ 3}'
+            : (sum / 3).toStringAsFixed(1);
         return Problem(
           question: 'Mean of $a, $b, $c = ?',
           answer: avg,

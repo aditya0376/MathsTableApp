@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'practice_screen.dart';
 
-/// Table practice: select tables and mode, then start practice.
+/// Table practice: select one or more tables and a mode, then start practice.
 class TablePracticeScreen extends StatefulWidget {
   const TablePracticeScreen({super.key});
 
@@ -11,7 +11,7 @@ class TablePracticeScreen extends StatefulWidget {
 }
 
 class _TablePracticeScreenState extends State<TablePracticeScreen> {
-  int _selectedTable = 7;
+  final Set<int> _selectedTables = {7};
   String _mode = 'Random';
   int _timerSeconds = 60;
 
@@ -25,22 +25,45 @@ class _TablePracticeScreenState extends State<TablePracticeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Select a table',
+          const Text('Select tables (one or more)',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
-              for (var t = 1; t <= 9; t++)
-                ChoiceChip(
+              for (var t = 1; t <= 10; t++)
+                FilterChip(
                   label: Text('$t'),
-                  selected: _selectedTable == t,
-                  onSelected: (_) => setState(() => _selectedTable = t),
+                  selected: _selectedTables.contains(t),
+                  onSelected: (selected) => setState(() {
+                    if (selected) {
+                      _selectedTables.add(t);
+                    } else {
+                      _selectedTables.remove(t);
+                    }
+                  }),
                 ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () => setState(() {
+                  _selectedTables.addAll(List.generate(10, (i) => i + 1));
+                }),
+                child: const Text('Select all'),
+              ),
+              TextButton(
+                onPressed: () => setState(() {
+                  _selectedTables.clear();
+                }),
+                child: const Text('Clear'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
           const Text('Mode',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
@@ -70,17 +93,19 @@ class _TablePracticeScreenState extends State<TablePracticeScreen> {
           FilledButton.icon(
             icon: const Icon(Icons.play_arrow),
             label: const Text('Start Practice'),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => PracticeScreen(
-                  mode: 'Table $_selectedTable',
-                  table: _selectedTable,
-                  tableMode: _mode,
-                  timerSeconds: _timerSeconds,
-                ),
-              ),
-            ),
+            onPressed: _selectedTables.isEmpty
+                ? null
+                : () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PracticeScreen(
+                          mode: 'Table Practice',
+                          tables: _selectedTables.toList(),
+                          tableMode: _mode,
+                          timerSeconds: _timerSeconds,
+                        ),
+                      ),
+                    ),
           ),
         ],
       ),

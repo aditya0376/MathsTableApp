@@ -26,7 +26,7 @@ class ScoringEngine {
   /// Evaluates an answer. Returns the points awarded (can be negative).
   int evaluate(String userAnswer, String correctAnswer) {
     _total++;
-    final isCorrect = userAnswer.trim() == correctAnswer.trim();
+    final isCorrect = _answersMatch(userAnswer, correctAnswer);
     if (isCorrect) {
       _correct++;
       _streak++;
@@ -46,6 +46,40 @@ class ScoringEngine {
 
   double get accuracy =>
       _total == 0 ? 0 : (_correct / _total) * 100;
+
+  /// Compares two answers, tolerating numeric formatting differences
+  /// (e.g. "4" == "4.0", "1/2" == "0.5").
+  bool _answersMatch(String user, String correct) {
+    final u = user.trim();
+    final c = correct.trim();
+    if (u == c) return true;
+
+    // Convert each side to a numeric value if possible (decimal or fraction).
+    final uVal = _toNumeric(u);
+    final cVal = _toNumeric(c);
+    if (uVal != null && cVal != null) {
+      return (uVal - cVal).abs() < 0.001;
+    }
+
+    return false;
+  }
+
+  /// Converts a decimal or fraction string to a double, or null if not numeric.
+  double? _toNumeric(String s) {
+    final asDouble = double.tryParse(s);
+    if (asDouble != null) return asDouble;
+    return _parseFraction(s);
+  }
+
+  /// Parses a fraction string like "3/4" into a double, or null if not a fraction.
+  double? _parseFraction(String s) {
+    final parts = s.split('/');
+    if (parts.length != 2) return null;
+    final num = double.tryParse(parts[0].trim());
+    final den = double.tryParse(parts[1].trim());
+    if (num == null || den == null || den == 0) return null;
+    return num / den;
+  }
 
   /// Performance rating based on accuracy.
   String get rating {
