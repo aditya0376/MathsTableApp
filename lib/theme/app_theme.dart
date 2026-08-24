@@ -14,6 +14,14 @@ enum AppTheme {
 
   final String label;
   const AppTheme(this.label);
+
+  /// Whether this theme is a kids/cartoon theme that shows funky characters.
+  bool get isKidsTheme =>
+      this == AppTheme.kids ||
+      this == AppTheme.disney ||
+      this == AppTheme.spiderman ||
+      this == AppTheme.superman ||
+      this == AppTheme.princess;
 }
 
 /// Builds a [ThemeData] for a given [AppTheme].

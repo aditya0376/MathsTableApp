@@ -52,7 +52,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           if (!appState.hasKidName)
             _NamePromptCard(onSave: (name) => appState.setKidName(name)),
-          const _CharacterBanner(),
+          if (appState.theme.isKidsTheme) const _CharacterBanner(),
           _SectionCard(
             title: 'Practice',
             subtitle: 'Addition, Subtraction, Multiplication, Division',
