@@ -18,7 +18,7 @@ class _TablePracticeScreenState extends State<TablePracticeScreen> {
 
   static const _modes = ['Sequential', 'Random', 'Reverse', 'FillBlank'];
   static const _operations = ['+', '-', 'x', '/'];
-  static const _timerOptions = [30, 60, 120, 300, 600];
+  static const _timerOptions = [30, 60, 120, 300];
 
   @override
   Widget build(BuildContext context) {

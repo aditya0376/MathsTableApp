@@ -22,7 +22,7 @@ class _HigherMathScreenState extends State<HigherMathScreen> {
     'Algebra',
     'Averages',
   ];
-  static const _timerOptions = [60, 120, 300, 600];
+  static const _timerOptions = [60, 120, 300];
 
   @override
   Widget build(BuildContext context) {
