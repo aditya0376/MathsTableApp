@@ -1,0 +1,35 @@
+# Codemagic cloud build configuration.
+# Builds the Android APK and iOS app with zero local installation.
+# See https://docs.codemagic.io for full reference.
+
+workflows:
+  android-workflow:
+    name: Android Build
+    max_build_duration: 60
+    environment:
+      flutter: stable
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Run tests
+        script: flutter test
+      - name: Build APK
+        script: flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+
+  ios-workflow:
+    name: iOS Build
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Run tests
+        script: flutter test
+      - name: Build iOS
+        script: flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/iphoneos/*.ipa
