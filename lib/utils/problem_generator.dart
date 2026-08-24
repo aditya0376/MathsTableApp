@@ -115,6 +115,60 @@ class ProblemGenerator {
     }
   }
 
+  /// Generates a Maths Table Rush problem for a given table, operation, and mode.
+  /// Supports all four operations: +, -, x, /.
+  static Problem tableRushProblem(int table, String operation, String mode) {
+    final n = _rng.nextInt(10) + 1; // 1..10
+    switch (operation) {
+      case '+':
+        return Problem(
+          question: '$table + $n = ?',
+          answer: '${table + n}',
+          operation: '+',
+        );
+      case '-':
+        // Ensure non-negative result.
+        final big = max(table, n);
+        final small = min(table, n);
+        return Problem(
+          question: '$big - $small = ?',
+          answer: '${big - small}',
+          operation: '-',
+        );
+      case '/':
+        final product = table * n;
+        return Problem(
+          question: '$product / $table = ?',
+          answer: '$n',
+          operation: '/',
+        );
+      case 'x':
+      default:
+        switch (mode) {
+          case 'Reverse':
+            final product = table * n;
+            return Problem(
+              question: '? x $table = $product',
+              answer: '$n',
+              operation: 'x',
+            );
+          case 'FillBlank':
+            final product = table * n;
+            return Problem(
+              question: '$table x ? = $product',
+              answer: '$n',
+              operation: 'x',
+            );
+          default: // Sequential / Random
+            return Problem(
+              question: '$table x $n = ?',
+              answer: '${table * n}',
+              operation: 'x',
+            );
+        }
+    }
+  }
+
   // ---- Higher order maths ----
 
   static Problem higherMath(String topic) {

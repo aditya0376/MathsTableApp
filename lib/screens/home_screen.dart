@@ -42,8 +42,8 @@ class HomeScreen extends StatelessWidget {
             onTap: () => _openPractice(context),
           ),
           _SectionCard(
-            title: 'Table Practice',
-            subtitle: 'Master multiplication tables 1-9',
+            title: 'Maths Table Rush',
+            subtitle: 'Master tables with +, -, x, /',
             icon: Icons.grid_on,
             onTap: () => Navigator.push(
               context,

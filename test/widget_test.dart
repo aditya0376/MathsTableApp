@@ -18,7 +18,7 @@ void main() {
 
     // The three main sections should be visible.
     expect(find.text('Practice'), findsOneWidget);
-    expect(find.text('Table Practice'), findsOneWidget);
+    expect(find.text('Maths Table Rush'), findsOneWidget);
     expect(find.text('Higher Order Maths'), findsOneWidget);
   });
 }

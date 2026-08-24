@@ -14,6 +14,7 @@ class PracticeScreen extends StatefulWidget {
   final String difficulty;
   final int? timerSeconds; // null = no timer
   final List<int>? tables; // for table practice (one or more tables)
+  final List<String>? operations; // for table rush (+, -, x, /)
   final String? tableMode; // Sequential/Random/Reverse/FillBlank
   final String? higherTopic; // for higher order maths
 
@@ -23,6 +24,7 @@ class PracticeScreen extends StatefulWidget {
     this.difficulty = 'Easy',
     this.timerSeconds,
     this.tables,
+    this.operations,
     this.tableMode,
     this.higherTopic,
   });
@@ -41,6 +43,19 @@ class _PracticeScreenState extends State<PracticeScreen> {
   int _timeLeft = 0;
   bool _finished = false;
   int _startTime = 0;
+  String? _encouragement;
+  Timer? _encouragementTimer;
+
+  static const _encouragements = [
+    'Wow!',
+    'Superb!',
+    'Genius!',
+    'Mind blowing!',
+    'Amazing!',
+    'Outstanding!',
+    'Brilliant!',
+    'Incredible!',
+  ];
 
   @override
   void initState() {
@@ -65,6 +80,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _encouragementTimer?.cancel();
     _answerController.dispose();
     super.dispose();
   }
@@ -74,8 +90,14 @@ class _PracticeScreenState extends State<PracticeScreen> {
       if (widget.tables != null && widget.tables!.isNotEmpty) {
         // Pick a random table from the selected list.
         final table = widget.tables![_rng.nextInt(widget.tables!.length)];
-        _current = ProblemGenerator.tableProblem(
+        // Pick an operation. In Random mode, mix all selected operations.
+        final ops = widget.operations ?? const ['x'];
+        final op = (widget.tableMode == 'Random' && ops.length > 1)
+            ? ops[_rng.nextInt(ops.length)]
+            : ops.first;
+        _current = ProblemGenerator.tableRushProblem(
           table,
+          op,
           widget.tableMode ?? 'Random',
         );
       } else if (widget.higherTopic != null) {
@@ -91,8 +113,21 @@ class _PracticeScreenState extends State<PracticeScreen> {
     if (_current == null || _finished) return;
     final answer = _answerController.text.trim();
     if (answer.isEmpty) return;
-    _engine.evaluate(answer, _current!.answer);
+    final wasCorrect = _engine.evaluate(answer, _current!.answer) >= 0;
+    if (wasCorrect && _engine.score > 50) {
+      _showEncouragement();
+    }
     _nextProblem();
+  }
+
+  void _showEncouragement() {
+    _encouragementTimer?.cancel();
+    setState(() {
+      _encouragement = _encouragements[_rng.nextInt(_encouragements.length)];
+    });
+    _encouragementTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _encouragement = null);
+    });
   }
 
   void _finish() {
@@ -155,45 +190,88 @@ class _PracticeScreenState extends State<PracticeScreen> {
         ],
       ),
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            _buildHeader(scheme),
-            Expanded(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _current?.question ?? '',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 44,
-                          fontWeight: FontWeight.bold,
-                          color: scheme.onSurface,
-                        ),
+            Column(
+              children: [
+                _buildHeader(scheme),
+                Expanded(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _current?.question ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 44,
+                              fontWeight: FontWeight.bold,
+                              color: scheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          TextField(
+                            controller: _answerController,
+                            readOnly: true,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            decoration: const InputDecoration(
+                              hintText: 'Answer',
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 24),
-                      TextField(
-                        controller: _answerController,
-                        readOnly: true,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: const InputDecoration(
-                          hintText: 'Answer',
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+                _buildNumberPad(scheme),
+              ],
             ),
-            _buildNumberPad(scheme),
+            if (_encouragement != null) _buildEncouragement(scheme),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEncouragement(ColorScheme scheme) {
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: Container(
+          color: Colors.black.withValues(alpha: 0.4),
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.celebration, size: 90, color: Colors.amber),
+              const SizedBox(height: 16),
+              Text(
+                _encouragement!,
+                style: const TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber,
+                  shadows: [
+                    Shadow(color: Colors.black, blurRadius: 8),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Score: ${_engine.score}',
+                style: const TextStyle(
+                  fontSize: 22,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
