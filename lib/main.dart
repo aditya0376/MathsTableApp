@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
+import 'widgets/kids_background.dart';
 
 /// App-wide state: current theme, kid's name, and persisted settings.
 class AppState extends ChangeNotifier {
@@ -68,11 +69,14 @@ class MathsTablesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appState = context.watch<AppState>();
+    final home = const HomeScreen();
     return MaterialApp(
       title: 'Maths Tables Practice',
       debugShowCheckedModeBanner: false,
       theme: buildTheme(appState.theme),
-      home: const HomeScreen(),
+      home: appState.theme.isKidsTheme
+          ? KidsBackground(child: home)
+          : home,
     );
   }
 }

@@ -2,13 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../main.dart';
 import '../models/session.dart';
 import '../utils/problem_generator.dart';
 import '../utils/scoring_engine.dart';
-import '../widgets/cartoon_character_view.dart';
 import 'results_screen.dart';
 
 /// Practice screen with on-screen number pad, timer, and live scoring.
@@ -151,7 +148,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final isKids = context.watch<AppState>().theme.isKidsTheme;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.mode),
@@ -179,14 +175,6 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (isKids)
-                        CartoonCharacterView(
-                          type: CartoonType.values[
-                              _rng.nextInt(CartoonType.values.length)],
-                          size: 70,
-                          primaryColor: scheme.primary,
-                        ),
-                      const SizedBox(height: 12),
                       Text(
                         _current?.question ?? '',
                         textAlign: TextAlign.center,

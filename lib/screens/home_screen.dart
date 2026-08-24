@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
-import '../widgets/cartoon_character_view.dart';
 import 'dashboard_screen.dart';
 import 'history_screen.dart';
 import 'higher_math_screen.dart';
@@ -52,7 +51,6 @@ class HomeScreen extends StatelessWidget {
         children: [
           if (!appState.hasKidName)
             _NamePromptCard(onSave: (name) => appState.setKidName(name)),
-          if (appState.theme.isKidsTheme) const _CharacterBanner(),
           _SectionCard(
             title: 'Practice',
             subtitle: 'Addition, Subtraction, Multiplication, Division',
@@ -123,34 +121,6 @@ class HomeScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _CharacterBanner extends StatelessWidget {
-  const _CharacterBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Card(
-      color: scheme.primaryContainer.withValues(alpha: 0.4),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CartoonCharacterView(
-                type: CartoonType.robot, size: 64, primaryColor: scheme.primary),
-            const CartoonCharacterView(
-                type: CartoonType.sun, size: 64, primaryColor: Colors.amber),
-            const CartoonCharacterView(
-                type: CartoonType.cat, size: 64, primaryColor: Colors.brown),
-            const CartoonCharacterView(
-                type: CartoonType.rocket, size: 64, primaryColor: Colors.green),
-          ],
-        ),
-      ),
     );
   }
 }
