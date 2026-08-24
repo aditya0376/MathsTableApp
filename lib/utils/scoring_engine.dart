@@ -15,6 +15,7 @@ class ScoringEngine {
   int _correct = 0;
   int _wrong = 0;
   int _total = 0;
+  final Map<String, int> _operationStats = {};
 
   int get score => _score;
   int get streak => _streak;
@@ -22,6 +23,13 @@ class ScoringEngine {
   int get correct => _correct;
   int get wrong => _wrong;
   int get total => _total;
+  Map<String, int> get operationStats => Map.unmodifiable(_operationStats);
+
+  /// Records the result of an answer for a specific operation.
+  void recordOperation(String operation, bool isCorrect) {
+    _operationStats[operation] =
+        (_operationStats[operation] ?? 0) + (isCorrect ? 1 : 0);
+  }
 
   /// Evaluates an answer. Returns the points awarded (can be negative).
   int evaluate(String userAnswer, String correctAnswer) {

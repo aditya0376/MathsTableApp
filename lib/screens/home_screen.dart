@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../main.dart';
+import 'dashboard_screen.dart';
 import 'history_screen.dart';
 import 'higher_math_screen.dart';
 import 'practice_screen.dart';
@@ -12,10 +15,21 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Maths Tables Practice'),
+        title: Text(appState.hasKidName
+            ? 'Hi, ${appState.kidName}!'
+            : 'Maths Tables Practice'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.dashboard),
+            tooltip: 'Performance Dashboard',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const DashboardScreen()),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => Navigator.push(
@@ -35,6 +49,8 @@ class HomeScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (!appState.hasKidName)
+            _NamePromptCard(onSave: (name) => appState.setKidName(name)),
           _SectionCard(
             title: 'Practice',
             subtitle: 'Addition, Subtraction, Multiplication, Division',
@@ -105,6 +121,59 @@ class HomeScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _NamePromptCard extends StatefulWidget {
+  final ValueChanged<String> onSave;
+  const _NamePromptCard({required this.onSave});
+
+  @override
+  State<_NamePromptCard> createState() => _NamePromptCardState();
+}
+
+class _NamePromptCardState extends State<_NamePromptCard> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Card(
+      color: scheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Welcome! What is your name?',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                hintText: 'Enter your name',
+                prefixIcon: Icon(Icons.person),
+              ),
+            ),
+            const SizedBox(height: 12),
+            FilledButton(
+              onPressed: () {
+                if (_controller.text.trim().isNotEmpty) {
+                  widget.onSave(_controller.text);
+                }
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

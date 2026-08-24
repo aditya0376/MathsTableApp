@@ -6,7 +6,11 @@ enum AppTheme {
   dark('Dark'),
   ocean('Ocean'),
   midnight('Midnight'),
-  kids('Kids');
+  kids('Kids'),
+  disney('Disney'),
+  spiderman('Spiderman'),
+  superman('Superman'),
+  princess('Princess');
 
   final String label;
   const AppTheme(this.label);
@@ -45,6 +49,34 @@ ThemeData buildTheme(AppTheme theme) {
       );
     case AppTheme.kids:
       return _kidsTheme();
+    case AppTheme.disney:
+      return _base(
+        brightness: Brightness.light,
+        primary: const Color(0xFF1565C0),
+        surface: const Color(0xFFE3F2FD),
+        onSurface: const Color(0xFF0D47A1),
+      );
+    case AppTheme.spiderman:
+      return _base(
+        brightness: Brightness.light,
+        primary: const Color(0xFFD32F2F),
+        surface: const Color(0xFFFFEBEE),
+        onSurface: const Color(0xFFB71C1C),
+      );
+    case AppTheme.superman:
+      return _base(
+        brightness: Brightness.light,
+        primary: const Color(0xFF1565C0),
+        surface: const Color(0xFFFFF3E0),
+        onSurface: const Color(0xFFE65100),
+      );
+    case AppTheme.princess:
+      return _base(
+        brightness: Brightness.light,
+        primary: const Color(0xFFAD1457),
+        surface: const Color(0xFFFCE4EC),
+        onSurface: const Color(0xFF880E4F),
+      );
   }
 }
 

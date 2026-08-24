@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Represents a single practice session saved to the local database.
 class Session {
   final int? id;
@@ -10,6 +12,7 @@ class Session {
   final int correct;
   final int wrong;
   final int durationSeconds;
+  final Map<String, int> operationStats; // operation -> correct count
 
   const Session({
     this.id,
@@ -22,6 +25,7 @@ class Session {
     required this.correct,
     required this.wrong,
     required this.durationSeconds,
+    this.operationStats = const {},
   });
 
   /// Performance rating based on accuracy.
@@ -43,10 +47,20 @@ class Session {
       'correct': correct,
       'wrong': wrong,
       'durationSeconds': durationSeconds,
+      'operationStats': jsonEncode(operationStats),
     };
   }
 
   factory Session.fromMap(Map<String, Object?> map) {
+    Map<String, int> stats = {};
+    final rawStats = map['operationStats'];
+    if (rawStats is String && rawStats.isNotEmpty) {
+      final decoded = jsonDecode(rawStats);
+      if (decoded is Map) {
+        stats = decoded.map(
+            (k, v) => MapEntry(k.toString(), (v as num).toInt()));
+      }
+    }
     return Session(
       id: map['id'] as int?,
       date: DateTime.parse(map['date'] as String),
@@ -58,6 +72,7 @@ class Session {
       correct: map['correct'] as int,
       wrong: map['wrong'] as int,
       durationSeconds: map['durationSeconds'] as int,
+      operationStats: stats,
     );
   }
 }

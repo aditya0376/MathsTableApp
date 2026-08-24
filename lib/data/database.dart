@@ -9,7 +9,7 @@ class AppDatabase {
   static final AppDatabase instance = AppDatabase._();
 
   static const _dbName = 'maths_tables.db';
-  static const _dbVersion = 1;
+  static const _dbVersion = 2;
 
   Database? _database;
 
@@ -35,9 +35,16 @@ class AppDatabase {
             totalProblems INTEGER NOT NULL,
             correct INTEGER NOT NULL,
             wrong INTEGER NOT NULL,
-            durationSeconds INTEGER NOT NULL
+            durationSeconds INTEGER NOT NULL,
+            operationStats TEXT
           )
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute(
+              'ALTER TABLE sessions ADD COLUMN operationStats TEXT');
+        }
       },
     );
   }

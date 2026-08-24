@@ -99,7 +99,8 @@ class _PracticeScreenState extends State<PracticeScreen> {
     if (_current == null || _finished) return;
     final answer = _answerController.text.trim();
     if (answer.isEmpty) return;
-    _engine.evaluate(answer, _current!.answer);
+    final isCorrect = _engine.evaluate(answer, _current!.answer) >= 0;
+    _engine.recordOperation(_current!.operation, isCorrect);
     _nextProblem();
   }
 
@@ -119,6 +120,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
       correct: _engine.correct,
       wrong: _engine.wrong,
       durationSeconds: elapsed,
+      operationStats: _engine.operationStats,
     );
     Navigator.pushReplacement(
       context,

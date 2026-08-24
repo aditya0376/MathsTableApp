@@ -5,13 +5,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/home_screen.dart';
 import 'theme/app_theme.dart';
 
-/// App-wide state: current theme and persisted settings.
+/// App-wide state: current theme, kid's name, and persisted settings.
 class AppState extends ChangeNotifier {
   AppTheme _theme = AppTheme.light;
   bool _soundEnabled = true;
+  String _kidName = '';
 
   AppTheme get theme => _theme;
   bool get soundEnabled => _soundEnabled;
+  String get kidName => _kidName;
+  bool get hasKidName => _kidName.trim().isNotEmpty;
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,6 +24,7 @@ class AppState extends ChangeNotifier {
       orElse: () => AppTheme.light,
     );
     _soundEnabled = prefs.getBool('sound') ?? true;
+    _kidName = prefs.getString('kidName') ?? '';
     notifyListeners();
   }
 
@@ -36,6 +40,13 @@ class AppState extends ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('sound', enabled);
+  }
+
+  Future<void> setKidName(String name) async {
+    _kidName = name.trim();
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('kidName', _kidName);
   }
 }
 
